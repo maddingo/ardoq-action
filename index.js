@@ -1,18 +1,18 @@
 const core = require('@actions/core');
-const wait = require('./wait');
+const wait = require('./ardoq');
 
 
 // most @actions toolkit packages have async methods
 async function run() {
   try {
-    const ms = core.getInput('milliseconds');
-    core.info(`Waiting ${ms} milliseconds ...`);
+    const ardoqToken = core.getInput('ardoq-token');
+    core.setSecret('ardoq-token');
+    const operation = core.getInput('operation');
 
-    core.debug((new Date()).toTimeString()); // debug is only output if you set the secret `ACTIONS_RUNNER_DEBUG` to true
-    await wait(parseInt(ms));
-    core.info((new Date()).toTimeString());
+    const result = {};
+    result.operation = operation;
 
-    core.setOutput('time', new Date().toTimeString());
+    core.setOutput('result', JSON.stringify(result));
   } catch (error) {
     core.setFailed(error.message);
   }

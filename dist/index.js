@@ -1,6 +1,31 @@
 require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
+/***/ 860:
+/***/ ((module) => {
+
+let ardoq = function (ardoqToken, operation) {
+  return new Promise((resolve) => {
+    if (typeof ardoqToken !== 'string' || ardoqToken.trim().length === 0) {
+      throw new Error('Missing authentication token');
+    }
+
+    switch (operation) {
+      case 'get-workspaces':
+            resolve('get-workspaces');
+            break;
+      default:
+        throw new Error('Unknown operation: ' + operation);
+        break;
+    }
+  });
+};
+
+module.exports = ardoq;
+
+
+/***/ }),
+
 /***/ 351:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -2688,23 +2713,6 @@ exports["default"] = _default;
 
 /***/ }),
 
-/***/ 258:
-/***/ ((module) => {
-
-let wait = function (milliseconds) {
-  return new Promise((resolve) => {
-    if (typeof milliseconds !== 'number') {
-      throw new Error('milliseconds not a number');
-    }
-    setTimeout(() => resolve("done!"), milliseconds)
-  });
-};
-
-module.exports = wait;
-
-
-/***/ }),
-
 /***/ 491:
 /***/ ((module) => {
 
@@ -2835,20 +2843,20 @@ var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
 const core = __nccwpck_require__(186);
-const wait = __nccwpck_require__(258);
+const wait = __nccwpck_require__(860);
 
 
 // most @actions toolkit packages have async methods
 async function run() {
   try {
-    const ms = core.getInput('milliseconds');
-    core.info(`Waiting ${ms} milliseconds ...`);
+    const ardoqToken = core.getInput('ardoq-token');
+    core.setSecret('ardoq-token');
+    const operation = core.getInput('operation');
 
-    core.debug((new Date()).toTimeString()); // debug is only output if you set the secret `ACTIONS_RUNNER_DEBUG` to true
-    await wait(parseInt(ms));
-    core.info((new Date()).toTimeString());
+    const result = {};
+    result.operation = operation;
 
-    core.setOutput('time', new Date().toTimeString());
+    core.setOutput('result', JSON.stringify(result));
   } catch (error) {
     core.setFailed(error.message);
   }

@@ -29,7 +29,7 @@ $ npm test
 
  PASS  ./index.test.js
   ✓ throws invalid number (3ms)
-  ✓ wait 500 ms (504ms)
+  ✓ ardoq 500 ms (504ms)
   ✓ test runs (95ms)
 ...
 ```
